@@ -7,4 +7,4 @@ RUN apk add nodejs
 WORKDIR /app
 COPY . .
 
-CMD [ "node", "/app/index.js" ]
+CMD [ "node", "/app/src/index.js" ]

@@ -1,0 +1,33 @@
+name: Custom action
+
+on:
+  pull_request:
+    types:
+      - "closed"
+    branches:
+      - "main"
+    
+env:
+  EMAIL: ${{ github.actor}}@no-reply.com
+
+jobs:
+  tag_action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Compute semver
+        uses: trainingspaces/semver@v0.0.18
+
+      - name: Creating tag
+        env:
+          TAG: ${{ steps.test.outputs.version }}
+        run: |
+          git config --local user.name ${{ github.actor }}
+          git config --local user.email ${{ env.EMAIL }}
+          echo "Creating tag $TAG"
+          git tag -a -m "auto tag $TAG" "v$TAG"
+          git push origin --tags
+        
